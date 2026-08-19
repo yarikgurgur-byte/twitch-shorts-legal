@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>TikTok authorization</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <main class="container">
+    <p class="eyebrow">Twitch Shorts Pipeline</p>
+    <h1>Авторизация TikTok завершена</h1>
+    <p id="status">Проверяем ответ TikTok…</p>
+    <section id="result" hidden>
+      <p>Скопируйте полный адрес этой страницы и вернитесь к настройке приложения.</p>
+      <button id="copy" type="button">Скопировать адрес</button>
+    </section>
+  </main>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const status = document.getElementById("status");
+    const result = document.getElementById("result");
+    if (params.has("code")) {
+      status.textContent = "Код авторизации получен.";
+      result.hidden = false;
+    } else if (params.has("error")) {
+      status.textContent = `TikTok вернул ошибку: ${params.get("error_description") || params.get("error")}`;
+    } else {
+      status.textContent = "Эта страница ожидает ответ авторизации TikTok.";
+    }
+    document.getElementById("copy")?.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(window.location.href);
+      status.textContent = "Адрес скопирован.";
+    });
+  </script>
+</body>
+</html>
